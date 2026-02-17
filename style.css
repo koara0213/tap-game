@@ -1,0 +1,227 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+#app {
+    width: 100%;
+    max-width: 500px;
+    height: 100vh;
+    max-height: 900px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* スコア表示 */
+.score-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.score-display {
+    text-align: center;
+}
+
+.score-label {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 5px;
+}
+
+.score-value {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.reset-btn {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reset-btn:active {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0.95);
+}
+
+/* ゲームエリア */
+.game-area {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(to bottom, #f0f4ff 0%, #e8f0ff 100%);
+    overflow: hidden;
+}
+
+/* タップ可能なアイテム */
+.tap-item {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    transform: translate(-50%, -50%);
+    user-select: none;
+}
+
+.tap-item:active {
+    transform: translate(-50%, -50%) scale(0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tap-item.normal {
+    background: #fff9e6;
+    border: 3px solid #ffd700;
+}
+
+.tap-item.special {
+    background: #fff0f5;
+    border: 3px solid #ff69b4;
+    animation: pulse 0.6s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(255, 105, 180, 0.6);
+    }
+}
+
+.item-emoji {
+    font-size: 40px;
+    margin-bottom: 5px;
+}
+
+.item-points {
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+}
+
+/* タップアニメーション */
+.tap-animation {
+    animation: tapPop 0.3s ease-out forwards;
+}
+
+@keyframes tapPop {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -150%) scale(0);
+        opacity: 0;
+    }
+}
+
+/* ゆるキャラ（マスコット） */
+.mascot {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 80px;
+    opacity: 0.8;
+    animation: bounce 2s infinite;
+}
+
+.mascot-emoji {
+    display: block;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* マイルストーン（100点達成） */
+.milestone {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 215, 0, 0.95);
+    color: #333;
+    padding: 30px 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    animation: milestoneAppear 0.5s ease-out;
+}
+
+.milestone-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+}
+
+@keyframes milestoneAppear {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    .score-value {
+        font-size: 36px;
+    }
+
+    .tap-item {
+        width: 70px;
+        height: 70px;
+    }
+
+    .item-emoji {
+        font-size: 35px;
+    }
+
+    .mascot {
+        font-size: 60px;
+    }
+}

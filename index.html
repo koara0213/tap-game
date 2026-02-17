@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タップゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- スコア表示 -->
+        <div class="score-container">
+            <div class="score-display">
+                <p class="score-label">スコア</p>
+                <p class="score-value">{{ score }}</p>
+            </div>
+            <button @click="resetGame" class="reset-btn">リセット</button>
+        </div>
+
+        <!-- ゲームエリア -->
+        <div class="game-area">
+            <!-- タップ可能なオブジェクト -->
+            <div 
+                v-for="(item, index) in tapItems" 
+                :key="index"
+                @click="tapItem(index)"
+                :class="['tap-item', item.type, { 'tap-animation': item.isAnimating }]"
+                :style="{ left: item.x + '%', top: item.y + '%' }"
+            >
+                <span class="item-points">+{{ item.points }}</span>
+                <span class="item-emoji">{{ item.emoji }}</span>
+            </div>
+
+            <!-- ゆるキャラ（デコレーション） -->
+            <div class="mascot">
+                <span class="mascot-emoji">😊</span>
+            </div>
+        </div>
+
+        <!-- ミルストーン表示 -->
+        <div class="milestone" v-if="score > 100">
+            <p class="milestone-text">🎉 100点達成！</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
