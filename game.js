@@ -35,8 +35,9 @@ createApp({
                 { emoji: '🍎', points: 1 },
                 { emoji: '🍊', points: 1 },
                 { emoji: '⭐', points: 10 },
-                { emoji: '💎', points: 10 },
-                { emoji: '🎁', points: 5 }
+                { emoji: '💎', points: 100 },
+                { emoji: '🎁', points: 5 },
+                { emoji: '💣', points: -50 }
             ];
 
             const randomItem = items[Math.floor(Math.random() * items.length)];
@@ -68,6 +69,11 @@ createApp({
 
             // アニメーション効果
             item.isAnimating = true;
+
+            // ボムなどの負のポイントの時は「残念な音」を再生
+            if (item.points < 0) {
+                this.playNegativeSound();
+            }
 
             // 100点を超えたら効果音を再生
             if (this.score > this.scoreThreshold && !this.soundPlayed) {
@@ -105,6 +111,30 @@ createApp({
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 0.2);
         },
+
+        playNegativeSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            oscillator.type = 'sawtooth';
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+
+            const now = audioContext.currentTime;
+            const duration = 1.2; // 再生時間を長く
+
+            // 低めの周波数で短く下がる音（残念サウンド）
+            oscillator.frequency.setValueAtTime(330, now);
+            oscillator.frequency.exponentialRampToValueAtTime(80, now + duration * 0.9);
+            
+            gain.gain.setValueAtTime(0.6, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            oscillator.start(now);
+            oscillator.stop(now + duration);
+        },
+
         resetGame() {
             if (confirm('ゲームをリセットしますか？')) {
                 this.initGame();

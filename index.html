@@ -27,7 +27,7 @@
                 :class="['tap-item', item.type, { 'tap-animation': item.isAnimating }]"
                 :style="{ left: item.x + '%', top: item.y + '%' }"
             >
-                <span class="item-points">+{{ item.points }}</span>
+                <span class="item-points">{{ item.points > 0 ? '+' + item.points : item.points }}</span>
                 <span class="item-emoji">{{ item.emoji }}</span>
             </div>
 
