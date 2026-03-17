@@ -3,57 +3,72 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
-            score: 0,
-            tapItems: [],
-            scoreThreshold: 100,
-            soundPlayed: false,
-            gameActive: true
+            score: 0,               // 現在の得点
+            tapItems: [],           // タップできるアイテムのリスト
+            scoreThreshold: 100,    // 効果音を再生する得点の閾値
+            soundPlayed: false,     // 効果音が再生されたかどうかのフラグ
+            gameActive: true,        // ゲームがアクティブかどうかのフラグ
+            images: {
+                background: 'assets/background.jpg',
+                apple: 'assets/apple.png',
+                orange: 'assets/orange.png',
+                star: 'assets/star.png',
+                gem: 'assets/diamond.png',
+                gift: 'assets/gift.png',
+                bomb: 'assets/bomb.png'
+            }
         };
     },
     mounted() {
-        this.initGame();
+        this.initGame();            // ゲームを初期化
+
         // 定期的に新しいアイテムを生成
+        // 1秒ごとに spawnNewItem を呼ぶなどしてアイテムを追加
         setInterval(() => {
             if (this.gameActive) {
                 this.spawnNewItem();
             }
         }, 1000);
     },
-    methods: {
-        initGame() {
-            this.score = 0;
-            this.tapItems = [];
-            this.soundPlayed = false;
-            this.gameActive = true;
+    methods: {              // Vue コンポーネントのメソッド群
+        initGame() {        // ゲームの初期化
+            this.score = 0;                 // 得点をリセット
+            this.tapItems = [];             // タップアイテムのリストを空にする
+            this.soundPlayed = false;       // 効果音再生フラグをリセット
+            this.gameActive = true;         // ゲームをアクティブにする
+
             // 初期アイテムを生成
             for (let i = 0; i < 3; i++) {
-                this.spawnNewItem();
+                this.spawnNewItem();        // 最初に3つのアイテムを生成
             }
         },
-        spawnNewItem() {
+        spawnNewItem() {                    // 新しいタップアイテムを生成
             const items = [
-                { emoji: '🍎', points: 1 },
-                { emoji: '🍊', points: 1 },
-                { emoji: '⭐', points: 10 },
-                { emoji: '💎', points: 100 },
-                { emoji: '🎁', points: 5 },
-                { emoji: '💣', points: -50 }
+                { emoji: '🍎', points: 1, image: this.images.apple },
+                { emoji: '🍊', points: 1, image: this.images.orange },
+                { emoji: '⭐', points: 10, image: this.images.star },
+                { emoji: '💎', points: 100, image: this.images.diamond },
+                { emoji: '🎁', points: 5, image: this.images.gift },
+                { emoji: '💣', points: -50, image: this.images.bomb }
             ];
 
             const randomItem = items[Math.floor(Math.random() * items.length)];
+            // 配列からランダムにひとつ選ぶ。
             const x = Math.random() * 80; // 左右のランダム位置（80%まで）
             const y = Math.random() * 60; // 上下のランダム位置（60%まで）
+            // アイテムの位置をランダムに設定。画面の80%と60%の範囲内で配置。
 
             const newItem = {
-                ...randomItem,
-                x: x,
-                y: y,
+                ...randomItem,              // ランダムに選ばれたアイテムのプロパティを展開
+                x: x,                       // アイテムのX座標
+                y: y,                       // アイテムのY座標         
                 type: randomItem.points === 1 ? 'normal' : 'special',
                 isAnimating: false,
                 id: Date.now() + Math.random()
             };
 
             this.tapItems.push(newItem);
+            // リストに追加し、Vueが再描写する。
 
             // 5秒後に自動削除
             setTimeout(() => {
@@ -63,9 +78,10 @@ createApp({
                 }
             }, 5000);
         },
-        tapItem(index) {
+        tapItem(index) {        // アイテムをタップしたときの処理
             const item = this.tapItems[index];
             this.score += item.points;
+            // 得点を加算（負の値なら減点になる）。
 
             // アニメーション効果
             item.isAnimating = true;
@@ -80,6 +96,8 @@ createApp({
                 this.playCelebrationSound();
                 this.soundPlayed = true;
             }
+            // 閾値を超え、まだ音を鳴らしていなければ
+            // お祝いの音を再生し、フラグを立てる。
 
             // アイテムを削除
             setTimeout(() => {
@@ -113,6 +131,7 @@ createApp({
         },
 
         playNegativeSound() {
+            // Web Audio APIを使ってシンプルな「残念な音」を生成
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gain = audioContext.createGain();
@@ -136,9 +155,11 @@ createApp({
         },
 
         resetGame() {
+            // リセットボタンなどから呼ばれ、ゲームをリセットする処理
             if (confirm('ゲームをリセットしますか？')) {
                 this.initGame();
             }
         }
     }
 }).mount('#app');
+// Vueアプリケーションを#app要素にマウントする。
