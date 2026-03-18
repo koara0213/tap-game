@@ -103,7 +103,7 @@ body {
 }
 
 .tap-item:active {
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(0.9) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -228,4 +228,55 @@ body {
     .mascot {
         font-size: 60px;
     }
+}
+
+/* タップアイテムのアニメーション */
+.tap-item.fall {
+    animation: fall 2s ease-in-out infinite;
+}
+
+@keyframes fall {
+    0% { transform: translate(-50%, -50%) translateY(-100px); }
+    100% { transform: translate(-50%, -50%) translateY(100px); }
+}
+
+.tap-item.slide {
+    animation: slide 2s ease-in-out infinite;
+}
+
+@keyframes slide {
+    0% { transform: translate(-50%, -50%) translateX(-100px); }
+    50% { transform: translate(-50%, -50%) translateX(100px); }
+    100% { transform: translate(-50%, -50%) translateX(300px); }
+}
+
+.tap-item.fade {
+    animation: fade 2s ease-in-out infinite;
+}
+
+@keyframes fade {
+    0%, 100% { opacity: 0; transform: translate(-50%, -50%); }
+    50% { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.tap-item.spiral {
+    animation: spiral 2s ease-in-out infinite;
+}
+
+@keyframes spiral {
+    0% { transform: translate(-50%, -50%) translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translate(-50%, -50%) translateX(50px) translateY(0) rotate(90deg); }
+    50% { transform: translate(-50%, -50%) translateX(50px) translateY(50px) rotate(180deg); }
+    75% { transform: translate(-50%, -50%) translateX(0) translateY(50px) rotate(270deg); }
+    100% { transform: translate(-50%, -50%) translateX(0) translateY(0) rotate(360deg); }
+}
+
+.tap-item.bounce {
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0% { transform: translate(-50%, -50%) translateY(0); }
+    50% { transform: translate(-50%, -50%) translateY(-30px); }
+    100% { transform: translate(-50%, -50%) translateY(0); }
 }

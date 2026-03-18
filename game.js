@@ -42,13 +42,18 @@ createApp({
                 this.spawnNewItem();        // 最初に3つのアイテムを生成
             }
         },
-        spawnNewItem() {                    // 新しいタップアイテムを生成
+        spawnNewItem() {                    // 新しいタップアイテムを生成　点数の低いものを出現率高めとする。
             const items = [
                 { emoji: '🍎', points: 1, image: this.images.apple },
+                { emoji: '🍎', points: 1, image: this.images.apple },   // 2回
                 { emoji: '🍊', points: 1, image: this.images.orange },
+                { emoji: '🍊', points: 1, image: this.images.orange },  // 2回
                 { emoji: '⭐', points: 10, image: this.images.star },
                 { emoji: '💎', points: 100, image: this.images.diamond },
                 { emoji: '🎁', points: 5, image: this.images.gift },
+                { emoji: '💣', points: -50, image: this.images.bomb },
+                { emoji: '💣', points: -50, image: this.images.bomb },
+                { emoji: '💣', points: -50, image: this.images.bomb },
                 { emoji: '💣', points: -50, image: this.images.bomb }
             ];
 
@@ -64,7 +69,8 @@ createApp({
                 y: y,                       // アイテムのY座標         
                 type: randomItem.points === 1 ? 'normal' : 'special',
                 isAnimating: false,
-                id: Date.now() + Math.random()
+                id: Date.now() + Math.random(),
+                animationType: this.getAnimationType(randomItem.emoji)  
             };
 
             this.tapItems.push(newItem);
@@ -78,6 +84,18 @@ createApp({
                 }
             }, 5000);
         },
+        getAnimationType(emoji) {
+            switch(emoji){
+                case '🍎': return 'fall';
+                case '🍊': return 'slide';
+                case '⭐': return 'fade';
+                case '💎': return 'spiral';
+                case '🎁': return 'bounce';
+                case '💣': return 'default';
+                default: return 'default';
+            }
+        },
+        
         tapItem(index) {        // アイテムをタップしたときの処理
             const item = this.tapItems[index];
             this.score += item.points;
@@ -85,6 +103,9 @@ createApp({
 
             // アニメーション効果
             item.isAnimating = true;
+
+            // タップするとすぐにアイテムを削除
+            this.tapItems.splice(index, 1);
 
             // ボムなどの負のポイントの時は「残念な音」を再生
             if (item.points < 0) {
